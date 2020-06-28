@@ -68,30 +68,24 @@ class Formmap extends Configurable
      * formmap definition loader
      *
      * @param string $path
-     * @return void
+     * @return $this
      * @throws FormmapException
      */
-    public function load(string $path): void
+    public function load(string $path): self
     {
         // 指定したフォームマップファイルが存在しない
-        if (true === is_null($path))
-        {
-            throw new FormmapException(sprintf('Formmap定義ファイル「%s」が存在しません', $path));
-        }
+        FormmapException::exceptionIf(is_null($path), sprintf('Formmap定義ファイル「%s」が存在しません', $path));
         if (false === file_exists($path))
         {
             // ファイル名だけの場合を考慮する
             $path = sprintf('%s/%s', $this->configures['path'], basename($path));
-            if (false === file_exists($path))
-            {
-                throw new FormmapException(sprintf('Formmap定義ファイル「%s」が存在しません', $path));
-            }
+            FormmapException::exceptionElse(file_exists($path), sprintf('Formmap定義ファイル「%s」が存在しません', $path));
         }
 
         // 多重読み込み防止
         if (true === in_array($path, $this->loaded_files))
         {
-            return;
+            return $this;
         }
 
         // load formmap
@@ -128,6 +122,8 @@ class Formmap extends Configurable
         $this->loaded_files[] = $path;
         // 多重バインド防止
         $this->is_bound = false;
+
+        return $this;
     }
 
 
@@ -136,15 +132,15 @@ class Formmap extends Configurable
      * form data binder
      *
      * @param bool $force 強制バインド
-     * @return void
+     * @return $this
      * @throws HttpException
      */
-    public function bind(bool $force = false): void
+    public function bind(bool $force = false): self
     {
         // 多重バインド防止
         if (true === $this->is_bound and false === $force)
         {
-            return;
+            return $this;
         }
 
         $request = Request::generate();
@@ -195,6 +191,8 @@ class Formmap extends Configurable
 
         // 多重バインド防止
         $this->is_bound = true;
+
+        return $this;
     }
 
 
