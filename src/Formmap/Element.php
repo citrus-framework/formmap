@@ -11,8 +11,6 @@ declare(strict_types=1);
 namespace Citrus\Formmap;
 
 use Citrus\Collection;
-use Citrus\Formmap;
-use Citrus\Message;
 use Citrus\Variable\Binders;
 use Citrus\Variable\Strings;
 
@@ -317,7 +315,7 @@ class Element
         }
         catch (FormmapException $e)
         {
-            Message::addError($e->getMessage(), null, Formmap::MESSAGE_TAG);
+            FormmapMessages::addItem(MessageItem::newType(MessageItem::TYPE_ERROR, $e->getMessage()));
             return 1;
         }
         return 0;

@@ -14,10 +14,11 @@ use Citrus\Configure\Configurable;
 use Citrus\Formmap\Element;
 use Citrus\Formmap\ElementType;
 use Citrus\Formmap\FormmapException;
+use Citrus\Formmap\FormmapObject;
 use Citrus\Http\HttpException;
 use Citrus\Http\Server\Request;
+use Citrus\Variable\PathBinders;
 use Citrus\Variable\Singleton;
-use Citrus\Variable\Strings;
 use Exception;
 
 /**
@@ -280,13 +281,13 @@ class Formmap extends Configurable
      *
      * @param string $namespace
      * @param string $form_id
-     * @return Struct
+     * @return FormmapObject
      */
-    public function generate(string $namespace, string $form_id)
+    public function generate(string $namespace, string $form_id): FormmapObject
     {
         $class_name = $this->classes[$namespace][$form_id];
 
-        /** @var Struct $object */
+        /** @var FormmapObject|PathBinders $object */
         $object = new $class_name();
 
         /** @var Element[] $properties */
@@ -300,7 +301,7 @@ class Formmap extends Configurable
             }
             $one->convertType();
             $value = $one->filter();
-            $object->setFromContext($one->property, $value);
+            $object->setPathValue($one->property, $value);
         }
 
         return $object;
