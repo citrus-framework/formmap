@@ -8,7 +8,7 @@ declare(strict_types=1);
  * @license     http://www.citrus.tk/
  */
 
-namespace Citrus\Formmap;
+namespace Citrus\Formmap\Message;
 
 use Citrus\Variable\Stockers\StockedItem;
 
